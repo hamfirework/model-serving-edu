@@ -1,0 +1,17 @@
+Werkzeug
+flask
+flask_cors
+numpy==1.18.4
+#Keras
+#gevent
+pillow
+h5py==2.10.0
+matplotlib
+scikit-image
+#mrcnn
+IPython
+opencv-python-headless==4.6.0.66
+tensorflow
+imageio
+gunicorn==19.7.1
+
