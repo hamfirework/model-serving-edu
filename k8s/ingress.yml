@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: covid-frontend
+            port:
+              number: 6000
+      - path: /covid19
+        pathType: Prefix
+        backend:
+          service:
+            name: my-nginx
+            port:
+              number: 5000
+      # - path: /covid19
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: my-nginx
+      #       port:
+      #         number: 5000
+      # - path: /v1/models/covid19/versions/:predict
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: model-server
+      #       port:
+      #         number: 8511

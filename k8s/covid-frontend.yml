@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covid-frontend
+spec:
+  selector:
+    matchLabels:
+      run: covid-frontend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: covid-frontend
+    spec:
+      containers:
+      - name: covid-frontend
+        image: voguebloom/covid19-frontend:v1.6
+        env:
+        - name : COVID_SERVER_URL
+          value : http://123.41.0.179:30112
+        ports:
+        - containerPort: 6000
+        volumeMounts:
+        - name: result
+          mountPath: /app/static/result
+        - name: source
+          mountPath: /app/static/source
+      volumes:
+      - name: result
+        hostPath:
+          path: /root/static/result
+      - name: source
+        hostPath:
+          path: /root/static/source
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: covid-frontend
+  labels:
+    run: covid-frontend
+spec:
+  ports:
+  - port: 6000
+    protocol: TCP
+    targetPort: 6000
+  selector:
+    run: covid-frontend

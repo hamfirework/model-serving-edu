@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: my-nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: voguebloom/flask:1.7
+        env:
+        - name: COVID_VERSION
+          value: "3"
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: result
+          mountPath: /app/static/result
+        - name: source
+          mountPath: /app/static/source
+      volumes:
+      - name: result
+        hostPath:
+          path: /root/static/result
+      - name: source
+        hostPath:
+          path: /root/static/source
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+spec:
+  ports:
+  - port: 5000
+    nodePort: 30112
+    targetPort: 5000
+  selector:
+    run: my-nginx
+  type: NodePort
